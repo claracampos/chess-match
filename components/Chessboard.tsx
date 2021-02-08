@@ -32,9 +32,13 @@ export const Chessboard = ({ player }: ChessboardProps) => {
       setTarget([rank, file]);
     }
   };
-
   return (
-    <View style={styles.board}>
+    <View
+      style={[
+        styles.board,
+        { flexDirection: player === "black" ? "column" : "column-reverse" },
+      ]}
+    >
       {boardState.map((rank, rankIndex) => (
         <View style={styles.rank} key={`rank${rankIndex}`}>
           {rank.map((square, squareIndex) => (
