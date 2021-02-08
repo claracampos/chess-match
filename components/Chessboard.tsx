@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { getRank } from "../lib/getRank";
 import { Square } from "./Square";
-import { Color, SquareContent } from "./types";
+import { Color, Rank, File, SquareContent } from "./types";
 
 interface ChessboardProps {
   player: Color;
@@ -22,14 +22,14 @@ export const Chessboard = ({ player }: ChessboardProps) => {
 
   const [boardState, setBoardState] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState<SquareContent>(undefined);
-  const [target, setTarget] = useState<Array<number> | undefined>(undefined);
+  const [target, setTarget] = useState<[File, Rank] | undefined>(undefined);
 
-  const handlePress = (rank: number, file: number, piece?: SquareContent) => {
+  const handlePress = (rank: Rank, file: File, piece?: SquareContent) => {
     if (piece && piece.color === player) {
       setSelectedPiece(piece);
     }
     if (selectedPiece) {
-      setTarget([rank, file]);
+      setTarget([file, rank]);
     }
   };
   return (
@@ -39,19 +39,25 @@ export const Chessboard = ({ player }: ChessboardProps) => {
         { flexDirection: player === "black" ? "column" : "column-reverse" },
       ]}
     >
-      {boardState.map((rank, rankIndex) => (
-        <View style={styles.rank} key={`rank${rankIndex}`}>
-          {rank.map((square, squareIndex) => (
-            <Square
-              content={square}
-              rank={rankIndex}
-              file={squareIndex}
-              key={`rank${rankIndex}-file${squareIndex}`}
-              onPress={() => handlePress(rankIndex, squareIndex, square)}
-            />
-          ))}
-        </View>
-      ))}
+      {boardState.map((rankArray, index) => {
+        const rank = index + 1;
+        return (
+          <View style={styles.rank} key={`rank${rank}`}>
+            {rankArray.map((square, squareIndex) => {
+              const file = squareIndex + 1;
+              return (
+                <Square
+                  content={square}
+                  rank={rank}
+                  file={file}
+                  key={`rank${rank}-file${file}`}
+                  onPress={() => handlePress(rank, file, square)}
+                />
+              );
+            })}
+          </View>
+        );
+      })}
     </View>
   );
 };
