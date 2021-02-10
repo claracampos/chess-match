@@ -1,6 +1,6 @@
 import { Color, SquareContent, ChessPiece, Piece } from "../components/types";
 
-export const getRank = (type: "pawn" | "initial" | "empty", color?: Color) => {
+const getRank = (type: "pawn" | "initial" | "empty", color?: Color) => {
   const pawnRank: Piece[] = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"];
   const initialRank: Piece[] = ["r1", "n1", "b1", "q", "k", "b2", "n2", "r2"];
   const emptyRank: SquareContent[] = [
@@ -13,7 +13,6 @@ export const getRank = (type: "pawn" | "initial" | "empty", color?: Color) => {
     undefined,
     undefined,
   ];
-
   if (type === "pawn" && color) {
     return addColor(pawnRank, color);
   }
@@ -29,3 +28,14 @@ const addColor = (rankPieces: Piece[], color: Color) => {
   );
   return rank;
 };
+
+export const initialChessboard = [
+  getRank("initial", "white"),
+  getRank("pawn", "white"),
+  getRank("empty"),
+  getRank("empty"),
+  getRank("empty"),
+  getRank("empty"),
+  getRank("pawn", "black"),
+  getRank("initial", "black"),
+];
