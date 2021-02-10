@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableHighlight } from "react-native";
 import { getSquareColor } from "../lib/getSquareColor";
 import { SquareContent } from "./types";
 
@@ -8,13 +8,26 @@ interface SquareProps {
   onPress: () => void;
   rank: number;
   file: number;
+  disabled?: boolean;
+  greenHighlight?: boolean;
 }
 
-export const Square = ({ content, rank, file, onPress }: SquareProps) => {
-  const squareStyle =
+export const Square = ({
+  content,
+  rank,
+  file,
+  onPress,
+  disabled,
+  greenHighlight,
+}: SquareProps) => {
+  let squareColor =
     getSquareColor(rank, file) === "white"
       ? styles.whiteSquare
       : styles.blackSquare;
+  if (greenHighlight) {
+    squareColor = styles.greenSquare;
+  }
+
   let pieceStyle;
   if (content) {
     pieceStyle =
@@ -22,11 +35,16 @@ export const Square = ({ content, rank, file, onPress }: SquareProps) => {
   }
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.square, squareStyle]}>
+    <TouchableHighlight
+      onPress={onPress}
+      style={[styles.square, squareColor]}
+      disabled={disabled}
+      underlayColor={"red"}
+    >
       <Text style={[styles.piece, pieceStyle]}>
-        {content ? content.piece[0] : ""}
+        {content ? content.piece : ""}
       </Text>
-    </TouchableOpacity>
+    </TouchableHighlight>
   );
 };
 
@@ -41,6 +59,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#4f4f4f",
   },
   whiteSquare: { backgroundColor: "#bdbdbd" },
+  blueSquare: { backgroundColor: "#bdbdbd" },
+  greenSquare: { backgroundColor: "green" },
   piece: {
     textTransform: "uppercase",
     fontWeight: "900",
