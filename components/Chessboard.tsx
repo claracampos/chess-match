@@ -1,50 +1,83 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { getRank } from "../lib/getRank";
+import { findPieceLocation } from "../lib/findPieceLocation";
+import { getNewBoardPositions } from "../lib/getNewBoardPositions";
+import { initialChessboard } from "../lib/initialChessboard";
+import { isCorrectPiece } from "../lib/isCorrectPiece";
+import { isCorrectTarget } from "../lib/isCorrectTarget";
 import { Square } from "./Square";
-import { Color, Rank, File, SquareContent } from "./types";
+import { Color, Rank, File, SquareContent, Move } from "./types";
 
 interface ChessboardProps {
   player: Color;
+  playersView: Color;
+  currentMove: Move;
+  playersTurn: boolean;
+  setPlayersTurn: React.Dispatch<React.SetStateAction<boolean>>;
+  highlightRank?: Rank;
+  highlightFile?: File;
 }
 
-export const Chessboard = ({ player }: ChessboardProps) => {
-  const initialBoard = [
-    getRank("initial", "white"),
-    getRank("pawn", "white"),
-    getRank("empty"),
-    getRank("empty"),
-    getRank("empty"),
-    getRank("empty"),
-    getRank("pawn", "black"),
-    getRank("initial", "black"),
-  ];
+export const Chessboard = ({
+  player,
+  playersView,
+  currentMove,
+  playersTurn,
+  setPlayersTurn,
+  highlightFile,
+  highlightRank,
+}: ChessboardProps) => {
+  const [boardState, setBoardState] = useState(initialChessboard);
+  const [selectedPiece, setSelectedPiece] = useState<[File, Rank] | undefined>(
+    undefined
+  );
 
-  const [boardState, setBoardState] = useState(initialBoard);
-  const [selectedPiece, setSelectedPiece] = useState<SquareContent>(undefined);
-  const [target, setTarget] = useState<[File, Rank] | undefined>(undefined);
+  const makeAMove = (newBoardState: SquareContent[][]) => {
+    setSelectedPiece(undefined);
+    setBoardState(newBoardState);
+    setPlayersTurn(!playersTurn);
+  };
 
   const handlePress = (rank: Rank, file: File, piece?: SquareContent) => {
-    if (piece && piece.color === player) {
-      setSelectedPiece(piece);
-    }
-    if (selectedPiece) {
-      setTarget([file, rank]);
+    if (!selectedPiece) {
+      const correctPieceSelected = piece
+        ? isCorrectPiece(player, piece, currentMove)
+        : false;
+      if (correctPieceSelected) {
+        setSelectedPiece([file, rank]);
+      }
+    } else {
+      if (isCorrectTarget(file, rank, currentMove)) {
+        const newPositions = getNewBoardPositions(
+          boardState,
+          selectedPiece,
+          rank,
+          file
+        );
+        makeAMove(newPositions);
+      }
     }
   };
+
   return (
     <View
       style={[
         styles.board,
-        { flexDirection: player === "black" ? "column" : "column-reverse" },
+        {
+          flexDirection: playersView === "black" ? "column" : "column-reverse",
+        },
       ]}
     >
       {boardState.map((rankArray, index) => {
-        const rank = index + 1;
+        const rank = index;
         return (
           <View style={styles.rank} key={`rank${rank}`}>
             {rankArray.map((square, squareIndex) => {
-              const file = squareIndex + 1;
+              const file = squareIndex;
+              const correct =
+                selectedPiece &&
+                rank === selectedPiece[1] &&
+                file === selectedPiece[0];
               return (
                 <Square
                   content={square}
@@ -52,6 +85,8 @@ export const Chessboard = ({ player }: ChessboardProps) => {
                   file={file}
                   key={`rank${rank}-file${file}`}
                   onPress={() => handlePress(rank, file, square)}
+                  greenHighlight={correct}
+                  disabled={!playersTurn}
                 />
               );
             })}
