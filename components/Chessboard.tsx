@@ -38,6 +38,31 @@ export const Chessboard = ({
     setPlayersTurn(!playersTurn);
   };
 
+  useEffect(() => {
+    if (!playersTurn) {
+      if (!selectedPiece) {
+        const [file, rank] = findPieceLocation(
+          boardState,
+          currentMove[0],
+          player
+        );
+        setSelectedPiece([file, rank]);
+      } else {
+        const moveRank = currentMove[2];
+        const moveFile = currentMove[1];
+        const newPositions = getNewBoardPositions(
+          boardState,
+          selectedPiece,
+          moveRank,
+          moveFile
+        );
+        setTimeout(() => {
+          makeAMove(newPositions);
+        }, [1000]);
+      }
+    }
+  }, [playersTurn, selectedPiece, currentMove]);
+
   const handlePress = (rank: Rank, file: File, piece?: SquareContent) => {
     if (!selectedPiece) {
       const correctPieceSelected = piece
