@@ -10,6 +10,9 @@ interface SquareProps {
   file: number;
   disabled?: boolean;
   greenHighlight?: boolean;
+  blueHighlight?: boolean;
+  highlightPiece?: boolean;
+  greenUnderlay?: boolean;
 }
 
 export const Square = ({
@@ -19,30 +22,38 @@ export const Square = ({
   onPress,
   disabled,
   greenHighlight,
+  blueHighlight,
+  highlightPiece,
+  greenUnderlay,
 }: SquareProps) => {
-  let squareColor =
-    getSquareColor(rank, file) === "white"
-      ? styles.whiteSquare
-      : styles.blackSquare;
+  const squareColor = getSquareColor(rank, file);
+  let squareStyle =
+    squareColor === "white" ? styles.whiteSquare : styles.blackSquare;
+  if (blueHighlight) {
+    squareStyle =
+      squareColor === "white" ? styles.lightBlueSquare : styles.darkBlueSquare;
+  }
   if (greenHighlight) {
-    squareColor = styles.greenSquare;
+    squareStyle = styles.greenSquare;
   }
 
-  let pieceStyle;
-  if (content) {
-    pieceStyle =
-      content.color === "white" ? styles.whitePiece : styles.blackPiece;
+  let pieceStyle =
+    content && content.color === "white"
+      ? styles.whitePiece
+      : styles.blackPiece;
+  if (highlightPiece) {
+    pieceStyle = styles.yellowPiece;
   }
 
   return (
     <TouchableHighlight
       onPress={onPress}
-      style={[styles.square, squareColor]}
+      style={[styles.square, squareStyle]}
       disabled={disabled}
-      underlayColor={"red"}
+      underlayColor={greenUnderlay ? "#99ffc0" : "#ff0a0a"}
     >
       <Text style={[styles.piece, pieceStyle]}>
-        {content ? content.piece : ""}
+        {content ? content.piece[0] : ""}
       </Text>
     </TouchableHighlight>
   );
@@ -59,8 +70,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#4f4f4f",
   },
   whiteSquare: { backgroundColor: "#bdbdbd" },
-  blueSquare: { backgroundColor: "#bdbdbd" },
-  greenSquare: { backgroundColor: "green" },
+  lightBlueSquare: { backgroundColor: "#198cff" },
+  darkBlueSquare: { backgroundColor: "#0825ff" },
+  greenSquare: { backgroundColor: "#05ff65" },
   piece: {
     textTransform: "uppercase",
     fontWeight: "900",
@@ -68,11 +80,12 @@ const styles = StyleSheet.create({
     textShadowRadius: 5,
   },
   blackPiece: {
-    color: "black",
-    textShadowColor: "white",
+    color: "#000",
+    textShadowColor: "#fff",
   },
   whitePiece: {
-    color: "white",
-    textShadowColor: "black",
+    color: "#fff",
+    textShadowColor: "#000",
   },
+  yellowPiece: { color: "#fff708", textShadowColor: "#000" },
 });
