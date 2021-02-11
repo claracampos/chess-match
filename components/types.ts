@@ -27,4 +27,5 @@ export type Piece =
 export type Rank = number;
 export type File = number;
 
-export type Move = [Piece, File, Rank];
+export type CastleMove = ["k", File, Rank, ["r1" | "r2", File, Rank]];
+export type Move = [Piece, File, Rank] | CastleMove;
