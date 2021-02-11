@@ -48,13 +48,11 @@ export const Chessboard = ({
         );
         setSelectedPiece([file, rank]);
       } else {
-        const moveRank = currentMove[2];
-        const moveFile = currentMove[1];
         const newPositions = getNewBoardPositions(
           boardState,
           selectedPiece,
-          moveRank,
-          moveFile
+          currentMove,
+          player
         );
         setTimeout(() => {
           makeAMove(newPositions);
@@ -76,8 +74,8 @@ export const Chessboard = ({
         const newPositions = getNewBoardPositions(
           boardState,
           selectedPiece,
-          rank,
-          file
+          currentMove,
+          player
         );
         makeAMove(newPositions);
       }
