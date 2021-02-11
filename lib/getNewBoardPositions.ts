@@ -1,14 +1,24 @@
-import { Rank, SquareContent, File } from "../components/types";
+import { Rank, SquareContent, File, Move, Color } from "../components/types";
+import { movePieces } from "./movePieces";
+import { castle } from "./castle";
 
 export const getNewBoardPositions = (
   boardState: SquareContent[][],
   selectedPiece: [File, Rank],
-  targetRank: Rank,
-  targetFile: File
+  currentMove: Move,
+  player: Color
 ) => {
-  let newBoard = [...boardState];
-  const [pieceFile, pieceRank] = selectedPiece;
-  const [piece] = newBoard[pieceRank].splice(pieceFile, 1, undefined);
-  newBoard[targetRank][targetFile] = piece;
-  return newBoard;
+  const targetFile = currentMove[1];
+  const targetRank = currentMove[2];
+  const castleMove = currentMove[3];
+  let newBoardPositions = movePieces(
+    boardState,
+    selectedPiece,
+    targetRank,
+    targetFile
+  );
+  if (castleMove) {
+    newBoardPositions = castle(boardState, castleMove, player);
+  }
+  return newBoardPositions;
 };
