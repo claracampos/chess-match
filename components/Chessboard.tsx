@@ -17,6 +17,7 @@ interface ChessboardProps {
   rankTip?: boolean;
   fileTip?: boolean;
   pieceTip: boolean;
+  endMatch: boolean;
 }
 
 export const Chessboard = ({
@@ -28,6 +29,7 @@ export const Chessboard = ({
   rankTip,
   fileTip,
   pieceTip,
+  endMatch,
 }: ChessboardProps) => {
   const [boardState, setBoardState] = useState(initialChessboard);
   const [selectedPiece, setSelectedPiece] = useState<[File, Rank] | undefined>(
@@ -65,7 +67,8 @@ export const Chessboard = ({
     playersTurn,
     boardState,
     currentMove,
-    makeAMove
+    makeAMove,
+    endMatch
   );
 
   return (
@@ -107,7 +110,7 @@ export const Chessboard = ({
                     rank === highlightRank || file === highlightFile
                   }
                   highlightPiece={playersTurn && pieceTip && correctPiece}
-                  disabled={!playersTurn}
+                  disabled={!playersTurn || endMatch}
                   greenUnderlay={greenUnderlay}
                 />
               );
