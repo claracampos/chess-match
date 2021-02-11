@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 import { Chessboard } from "./Chessboard";
 import { Color } from "./types";
 import { capablanca, bogoljubov } from "../lib/matchMoves";
@@ -19,6 +19,10 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
   }
 
   const [playersTurn, setPlayersTurn] = useState(player === "white");
+  const [rankTip, setRankTip] = useState(false);
+  const [fileTip, setFileTip] = useState(false);
+  const [pieceTip, setPieceTip] = useState(false);
+
   const turnRef = useRef(playersTurn);
   useEffect(() => {
     if (turnRef.current !== playersTurn) {
@@ -27,6 +31,9 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
       } else {
         playersMoves.shift();
       }
+      setRankTip(false);
+      setFileTip(false);
+      setPieceTip(false);
       turnRef.current = playersTurn;
     }
   });
@@ -35,13 +42,36 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
   return (
     <View style={styles.container}>
       {currentMove ? (
-        <Chessboard
-          activePlayer={playersTurn ? player : computer}
-          playersView={player}
-          playersTurn={playersTurn}
-          setPlayersTurn={setPlayersTurn}
-          currentMove={currentMove}
-        />
+        <View>
+          <Chessboard
+            activePlayer={playersTurn ? player : computer}
+            playersView={player}
+            playersTurn={playersTurn}
+            setPlayersTurn={setPlayersTurn}
+            currentMove={currentMove}
+            fileTip={fileTip}
+            rankTip={rankTip}
+            pieceTip={pieceTip}
+          />
+          <View>
+            <Text>Tip:</Text>
+            <Button
+              title="Piece"
+              onPress={() => setPieceTip(true)}
+              disabled={!playersTurn}
+            />
+            <Button
+              title="File"
+              onPress={() => setFileTip(true)}
+              disabled={!playersTurn}
+            />
+            <Button
+              title="Rank"
+              onPress={() => setRankTip(true)}
+              disabled={!playersTurn}
+            />
+          </View>
+        </View>
       ) : (
         <Text>End of match</Text>
       )}

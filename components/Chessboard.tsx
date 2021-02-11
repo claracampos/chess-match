@@ -14,8 +14,9 @@ interface ChessboardProps {
   currentMove: Move;
   playersTurn: boolean;
   setPlayersTurn: React.Dispatch<React.SetStateAction<boolean>>;
-  highlightRank?: Rank;
-  highlightFile?: File;
+  rankTip?: boolean;
+  fileTip?: boolean;
+  pieceTip: boolean;
 }
 
 export const Chessboard = ({
@@ -24,13 +25,16 @@ export const Chessboard = ({
   currentMove,
   playersTurn,
   setPlayersTurn,
-  highlightFile,
-  highlightRank,
+  rankTip,
+  fileTip,
+  pieceTip,
 }: ChessboardProps) => {
   const [boardState, setBoardState] = useState(initialChessboard);
   const [selectedPiece, setSelectedPiece] = useState<[File, Rank] | undefined>(
     undefined
   );
+  const highlightRank = playersTurn && rankTip ? currentMove[2] : undefined;
+  const highlightFile = playersTurn && fileTip ? currentMove[1] : undefined;
 
   const makeAMove = (newBoardState: SquareContent[][]) => {
     setSelectedPiece(undefined);
@@ -63,10 +67,7 @@ export const Chessboard = ({
 
   const handlePress = (rank: Rank, file: File, piece?: SquareContent) => {
     if (!selectedPiece) {
-      const correctPieceSelected = piece
-        ? isCorrectPiece(activePlayer, piece, currentMove)
-        : false;
-      if (correctPieceSelected) {
+      if (isCorrectPiece(activePlayer, piece, currentMove)) {
         setSelectedPiece([file, rank]);
       }
     } else {
@@ -97,10 +98,14 @@ export const Chessboard = ({
           <View style={styles.rank} key={`rank${rank}`}>
             {rankArray.map((square, squareIndex) => {
               const file = squareIndex;
-              const correct =
-                selectedPiece &&
-                rank === selectedPiece[1] &&
-                file === selectedPiece[0];
+              const correctPiece = isCorrectPiece(
+                activePlayer,
+                square,
+                currentMove
+              );
+              const greenUnderlay =
+                correctPiece ||
+                (selectedPiece && isCorrectTarget(file, rank, currentMove));
               return (
                 <Square
                   content={square}
@@ -108,8 +113,17 @@ export const Chessboard = ({
                   file={file}
                   key={`rank${rank}-file${file}`}
                   onPress={() => handlePress(rank, file, square)}
-                  greenHighlight={correct}
+                  greenHighlight={
+                    selectedPiece &&
+                    rank === selectedPiece[1] &&
+                    file === selectedPiece[0]
+                  }
+                  blueHighlight={
+                    rank === highlightRank || file === highlightFile
+                  }
+                  highlightPiece={playersTurn && pieceTip && correctPiece}
                   disabled={!playersTurn}
+                  greenUnderlay={greenUnderlay}
                 />
               );
             })}
