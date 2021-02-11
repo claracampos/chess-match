@@ -36,7 +36,7 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
     <View style={styles.container}>
       {currentMove ? (
         <Chessboard
-          player={playersTurn ? player : computer}
+          activePlayer={playersTurn ? player : computer}
           playersView={player}
           playersTurn={playersTurn}
           setPlayersTurn={setPlayersTurn}

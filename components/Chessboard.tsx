@@ -9,7 +9,7 @@ import { Square } from "./Square";
 import { Color, Rank, File, SquareContent, Move } from "./types";
 
 interface ChessboardProps {
-  player: Color;
+  activePlayer: Color;
   playersView: Color;
   currentMove: Move;
   playersTurn: boolean;
@@ -19,7 +19,7 @@ interface ChessboardProps {
 }
 
 export const Chessboard = ({
-  player,
+  activePlayer,
   playersView,
   currentMove,
   playersTurn,
@@ -44,7 +44,7 @@ export const Chessboard = ({
         const [file, rank] = findPieceLocation(
           boardState,
           currentMove[0],
-          player
+          activePlayer
         );
         setSelectedPiece([file, rank]);
       } else {
@@ -52,7 +52,7 @@ export const Chessboard = ({
           boardState,
           selectedPiece,
           currentMove,
-          player
+          activePlayer
         );
         setTimeout(() => {
           makeAMove(newPositions);
@@ -64,7 +64,7 @@ export const Chessboard = ({
   const handlePress = (rank: Rank, file: File, piece?: SquareContent) => {
     if (!selectedPiece) {
       const correctPieceSelected = piece
-        ? isCorrectPiece(player, piece, currentMove)
+        ? isCorrectPiece(activePlayer, piece, currentMove)
         : false;
       if (correctPieceSelected) {
         setSelectedPiece([file, rank]);
@@ -75,7 +75,7 @@ export const Chessboard = ({
           boardState,
           selectedPiece,
           currentMove,
-          player
+          activePlayer
         );
         makeAMove(newPositions);
       }
