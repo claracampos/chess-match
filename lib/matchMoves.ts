@@ -1,4 +1,4 @@
-import { Move } from "../components/types";
+import { CastleMove, Move } from "../components/types";
 
 export const capablanca: Move[] = [
   ["p4", 3, 3],
@@ -11,7 +11,8 @@ export const capablanca: Move[] = [
   ["b1", 4, 2],
   ["b2", 4, 5],
   ["n2", 4, 5],
-  // CASTLE ["k", 7, 1]["r2", 6, 1]
+  // CASTLE
+  ["k", 6, 0, ["r2", 5, 0]],
   ["p6", 4, 2],
   ["q", 1, 2],
   ["r2", 5, 4],
@@ -57,7 +58,7 @@ export const bogoljubov: Move[] = [
   ["k", 7, 4],
   ["n2", 5, 5],
   ["k", 6, 3],
-  ["k", 7, 3],
+  ["k", 7, 4],
   ["r2", 6, 5],
   ["p7", 6, 3],
   ["k", 6, 5],
