@@ -1,5 +1,7 @@
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button } from "./Button";
+import { Instructions } from "./Instructions";
 import { Color } from "./types";
 
 interface StartScreenProps {
@@ -7,12 +9,27 @@ interface StartScreenProps {
 }
 
 export const StartScreen = ({ setPlayer }: StartScreenProps) => {
+  const [showInstructions, setShowInstructions] = useState(false);
   return (
     <View style={styles.container}>
-      <Text>Moscow 1925</Text>
-      <Text>Pick your player</Text>
-      <Button onPress={() => setPlayer("white")} title="Capablanca" />
-      <Button onPress={() => setPlayer("black")} title="Bogoljubov" />
+      <Text style={styles.title}>Think Like a Grandmaster!</Text>
+      <View>
+        <Text style={styles.text}>Pick your player:</Text>
+        <Button onPress={() => setPlayer("white")} title="Capablanca" />
+        <Button
+          onPress={() => setPlayer("black")}
+          title="Bogoljubov"
+          dark={true}
+        />
+      </View>
+
+      {showInstructions ? (
+        <Instructions onRequestClose={() => setShowInstructions(false)} />
+      ) : (
+        <TouchableOpacity onPress={() => setShowInstructions(true)}>
+          <Text style={styles.toggle}>Instructions</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -22,6 +39,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: "200",
+    textAlign: "center",
+    marginBottom: 50,
+  },
+  text: {
+    fontWeight: "300",
+    marginBottom: 8,
+    textAlign: "center",
+    fontSize: 20,
+  },
+  toggle: {
+    fontSize: 22,
+    fontWeight: "200",
+    textTransform: "uppercase",
+    marginTop: 50,
   },
 });
