@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Color, Move, SquareContent } from "../components/types";
 import { findPieceLocation } from "./findPieceLocation";
 import { getNewBoardPositions } from "./getNewBoardPositions";
@@ -10,17 +10,9 @@ export const useComputersTurn = (
   makeAMove: (board: SquareContent[][]) => void,
   currentMove?: Move
 ) => {
-  const [pause, setPause] = useState(false);
   useEffect(() => {
     if (!playersTurn && currentMove) {
-      if (!pause) {
-        const timer = setTimeout(() => {
-          setPause(true);
-        }, [1000]);
-        return () => {
-          clearTimeout(timer);
-        };
-      } else {
+      setTimeout(() => {
         const chosenPiece = findPieceLocation(
           boardState,
           currentMove[0],
@@ -33,8 +25,7 @@ export const useComputersTurn = (
           activePlayer
         );
         makeAMove(newPositions);
-        setPause(false);
-      }
+      }, 1000);
     }
-  }, [playersTurn, currentMove, pause]);
+  }, [playersTurn, currentMove]);
 };
