@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
+    textAlign: "justify",
   },
   bold: { fontWeight: "600" },
   italic: { fontStyle: "italic" },
