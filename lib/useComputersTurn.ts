@@ -7,13 +7,12 @@ export const useComputersTurn = (
   activePlayer: Color,
   playersTurn: boolean,
   boardState: SquareContent[][],
-  currentMove: Move,
   makeAMove: (board: SquareContent[][]) => void,
-  endMatch: boolean
+  currentMove?: Move
 ) => {
   const [pause, setPause] = useState(false);
   useEffect(() => {
-    if (!playersTurn && !endMatch) {
+    if (!playersTurn && currentMove) {
       if (!pause) {
         const timer = setTimeout(() => {
           setPause(true);
@@ -37,5 +36,5 @@ export const useComputersTurn = (
         setPause(false);
       }
     }
-  }, [playersTurn, currentMove, pause, endMatch]);
+  }, [playersTurn, currentMove, pause]);
 };

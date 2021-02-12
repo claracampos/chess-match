@@ -11,13 +11,12 @@ import { Color, Rank, File, SquareContent, Move } from "./types";
 interface ChessboardProps {
   activePlayer: Color;
   playersView: Color;
-  currentMove: Move;
+  currentMove?: Move;
   playersTurn: boolean;
   setPlayersTurn: React.Dispatch<React.SetStateAction<boolean>>;
   rankTip?: boolean;
   fileTip?: boolean;
   pieceTip: boolean;
-  endMatch: boolean;
 }
 
 export const Chessboard = ({
@@ -29,14 +28,15 @@ export const Chessboard = ({
   rankTip,
   fileTip,
   pieceTip,
-  endMatch,
 }: ChessboardProps) => {
   const [boardState, setBoardState] = useState(initialChessboard);
   const [selectedPiece, setSelectedPiece] = useState<[File, Rank] | undefined>(
     undefined
   );
-  const highlightRank = playersTurn && rankTip ? currentMove[2] : undefined;
-  const highlightFile = playersTurn && fileTip ? currentMove[1] : undefined;
+  const highlightRank =
+    playersTurn && currentMove && rankTip ? currentMove[2] : undefined;
+  const highlightFile =
+    playersTurn && currentMove && fileTip ? currentMove[1] : undefined;
 
   const makeAMove = (newBoardState: SquareContent[][]) => {
     setSelectedPiece(undefined);
@@ -50,7 +50,7 @@ export const Chessboard = ({
         setSelectedPiece([file, rank]);
       }
     } else {
-      if (isCorrectTarget(file, rank, currentMove)) {
+      if (currentMove && isCorrectTarget(file, rank, currentMove)) {
         const newPositions = getNewBoardPositions(
           boardState,
           selectedPiece,
@@ -66,9 +66,8 @@ export const Chessboard = ({
     activePlayer,
     playersTurn,
     boardState,
-    currentMove,
     makeAMove,
-    endMatch
+    currentMove
   );
 
   return (
@@ -110,7 +109,7 @@ export const Chessboard = ({
                     rank === highlightRank || file === highlightFile
                   }
                   highlightPiece={playersTurn && pieceTip && correctPiece}
-                  disabled={!playersTurn || endMatch}
+                  disabled={!playersTurn || !currentMove}
                   greenUnderlay={greenUnderlay}
                 />
               );

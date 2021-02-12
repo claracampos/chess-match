@@ -63,7 +63,6 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
           fileTip={fileTip}
           rankTip={rankTip}
           pieceTip={pieceTip}
-          endMatch={endMatch}
         />
         <View style={styles.helpContainer}>
           <Text style={styles.text}>Help Me:</Text>

@@ -3,7 +3,7 @@ import { Color, Move, SquareContent } from "../components/types";
 export const isCorrectPiece = (
   player: Color,
   piece: SquareContent,
-  move: Move
+  move?: Move
 ) => {
-  return piece && piece.color === player && piece.piece === move[0];
+  return piece && move && piece.color === player && piece.piece === move[0];
 };
