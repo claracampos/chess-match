@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Button } from "./Button";
 import { Instructions } from "./Instructions";
 import { Color } from "./types";
@@ -11,41 +17,45 @@ interface StartScreenProps {
 export const StartScreen = ({ setPlayer }: StartScreenProps) => {
   const [showInstructions, setShowInstructions] = useState(false);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Think Like a Grandmaster!</Text>
-      <View>
-        <Text style={styles.text}>Pick your player:</Text>
-        <Button onPress={() => setPlayer("white")} title="Capablanca" />
-        <Button
-          onPress={() => setPlayer("black")}
-          title="Bogoljubov"
-          dark={true}
-        />
-      </View>
+    <ScrollView style={styles.view}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Think Like a Grandmaster!</Text>
+        <View>
+          <Text style={styles.text}>Pick your player:</Text>
+          <Button onPress={() => setPlayer("white")} title="Capablanca" />
+          <Button
+            onPress={() => setPlayer("black")}
+            title="Bogoljubov"
+            dark={true}
+          />
+        </View>
 
-      {showInstructions ? (
-        <Instructions onRequestClose={() => setShowInstructions(false)} />
-      ) : (
-        <TouchableOpacity onPress={() => setShowInstructions(true)}>
-          <Text style={styles.toggle}>Instructions</Text>
-        </TouchableOpacity>
-      )}
-    </View>
+        {showInstructions ? (
+          <Instructions onRequestClose={() => setShowInstructions(false)} />
+        ) : (
+          <TouchableOpacity onPress={() => setShowInstructions(true)}>
+            <Text style={styles.toggle}>Instructions</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  view: { flex: 1, backgroundColor: "#fff", flexDirection: "row" },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "space-around",
+    width: 350,
   },
   title: {
     fontSize: 36,
     fontWeight: "200",
     textAlign: "center",
     marginBottom: 50,
+    marginTop: 50,
   },
   text: {
     fontWeight: "300",
