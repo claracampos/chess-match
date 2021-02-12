@@ -62,7 +62,7 @@ export const Square = ({
 const styles = StyleSheet.create({
   square: {
     flex: 1,
-    height: 50,
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   piece: {
     textTransform: "uppercase",
     fontWeight: "900",
-    fontSize: 28,
+    fontSize: 24,
     textShadowRadius: 5,
   },
   blackPiece: {

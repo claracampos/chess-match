@@ -123,11 +123,11 @@ export const Chessboard = ({
 };
 
 const styles = StyleSheet.create({
-  board: { height: 400 },
+  board: { height: 320 },
   rank: {
     flexDirection: "row",
-    width: 400,
-    height: 50,
+    width: 320,
+    height: 40,
     flex: 1,
   },
 });
