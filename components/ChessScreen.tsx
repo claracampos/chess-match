@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Chessboard } from "./Chessboard";
 import { Color } from "./types";
 import { capablanca, bogoljubov } from "../lib/matchMoves";
+import { Button } from "./Button";
 
 interface StartScreenProps {
   player: Color;
@@ -43,11 +44,15 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
   return (
     <View style={styles.container}>
       <View>
-        {endMatch && (
+        {endMatch ? (
           <View>
-            <Text>End of Match</Text>
-            <Text>Bogoljubov resigns.</Text>
+            <Text style={[styles.boldTitle]}>End of Match</Text>
+            <Text style={[styles.text, styles.header]}>
+              Bogoljubov resigns.
+            </Text>
           </View>
+        ) : (
+          <Text style={[styles.text, styles.header]}>Moscow, 1925</Text>
         )}
         <Chessboard
           activePlayer={playersTurn ? player : computer}
@@ -60,22 +65,25 @@ export const ChessScreen = ({ player }: StartScreenProps) => {
           pieceTip={pieceTip}
           endMatch={endMatch}
         />
-        <View>
-          <Text>Tip:</Text>
+        <View style={styles.helpContainer}>
+          <Text style={styles.text}>Help Me:</Text>
           <Button
             title="Piece"
             onPress={() => setPieceTip(true)}
             disabled={!playersTurn || endMatch}
+            dark={true}
           />
           <Button
             title="File"
             onPress={() => setFileTip(true)}
             disabled={!playersTurn || endMatch}
+            dark={true}
           />
           <Button
             title="Rank"
             onPress={() => setRankTip(true)}
             disabled={!playersTurn || endMatch}
+            dark={true}
           />
         </View>
       </View>
@@ -90,4 +98,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  helpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    justifyContent: "space-around",
+  },
+  text: {
+    fontWeight: "300",
+    fontSize: 20,
+  },
+  boldTitle: { fontWeight: "700", textAlign: "center", fontSize: 28 },
+  header: { textAlign: "center", marginBottom: 16, fontSize: 24 },
 });
